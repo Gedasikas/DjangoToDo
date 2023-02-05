@@ -1,0 +1,30 @@
+{%extends 'base.html' %}
+{% block title %}<title>To do list</title>{% endblock %}
+{% block content %}
+{% if tasks %}
+{% for task in tasks %}
+<ul>
+    <li><a href="{{ task.id }}">{{ task.task }}</a>  {{ task.dueDate }} </li>
+</ul>
+{% endfor %}
+{% else %}
+<p>You have no dedicated tasks at the moment.</p>
+{% endif %}
+ <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; pirmas</a>
+            <a href="?page={{ page_obj.previous_page_number }}">atgal</a>
+        {% endif %}
+
+        <span class="current">
+            {{ page_obj.number }} iš {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">pirmyn</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">paskutinis &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}
