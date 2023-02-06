@@ -1,5 +1,4 @@
 from django.urls import reverse
-
 from .models import Task
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,6 +9,8 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic import (ListView, DetailView, CreateView, UpdateView,)
+from .forms import UserTaskCreateUpdateForm
+from django.contrib.auth.decorators import login_required
 
 class TaskListView(LoginRequiredMixin, generic.ListView):
     model = Task
@@ -25,7 +26,7 @@ class TaskDetailView(generic.DetailView):
     template_name = 'task.html'
 class TaskByUserCreateView(LoginRequiredMixin, CreateView):
     model = Task
-    fields = ['task', 'description', 'dueDate']
+    form_class = UserTaskCreateUpdateForm
     success_url = '/todo/'
     template_name = 'user_task_form.html'
     def form_valid(self, form):
@@ -33,7 +34,7 @@ class TaskByUserCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 class TaskByUserUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Task
-    fields = ['task', 'description', 'dueDate']
+    form_class = UserTaskCreateUpdateForm
     template_name = 'user_task_form.html'
 
     def get_success_url(self):
@@ -45,7 +46,15 @@ class TaskByUserUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.Upda
         task = self.get_object()
         return self.request.user == task.user
 
+class TaskByUserDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = Task
+    success_url = '/todo/'
+    template_name = 'user_task_delete.html'
+    context_object_name = 'delete_task'
 
+    def test_func(self):
+        task = self.get_object()
+        return self.request.user == task.user
 
 @csrf_protect
 def register(request):
@@ -73,6 +82,10 @@ def register(request):
             messages.error(request, 'Slaptažodžiai nesutampa!')
             return redirect('register')
     return render(request, 'register.html')
+
+@login_required
+def userprofile(request):
+    return render(request, 'userprofile.html')
 
 
 
