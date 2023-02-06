@@ -1,3 +1,5 @@
+from django.urls import reverse
+
 from .models import Task
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -21,6 +23,30 @@ class TaskDetailView(generic.DetailView):
     model = Task
     context_object_name = 'task'
     template_name = 'task.html'
+class TaskByUserCreateView(LoginRequiredMixin, CreateView):
+    model = Task
+    fields = ['task', 'description', 'dueDate']
+    success_url = '/todo/'
+    template_name = 'user_task_form.html'
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+class TaskByUserUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    model = Task
+    fields = ['task', 'description', 'dueDate']
+    template_name = 'user_task_form.html'
+
+    def get_success_url(self):
+        return reverse('task', kwargs={'pk': self.object.id})
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+    def test_func(self):
+        task = self.get_object()
+        return self.request.user == task.user
+
+
+
 @csrf_protect
 def register(request):
     if request.method == "POST":
@@ -48,10 +74,7 @@ def register(request):
             return redirect('register')
     return render(request, 'register.html')
 
-class TaskByUserCreateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    modl = Task
-    success_url = '/todo/tasks/'
-    template_name = 'user_task_form.html'
+
 
 
 

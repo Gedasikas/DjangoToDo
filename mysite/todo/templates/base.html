@@ -10,7 +10,7 @@
 <ul class="navbar-nav ml-auto">
     {% if user.is_authenticated %}
     <li><a class="nav-link active" href="{% url 'tasks' %}">My tasks</a>
-    <li class="nav-item"><a class="nav-link" href="{% url 'user_task_form' %}">New task</a></li>
+    <li class="nav-item"><a class="nav-link" href="{% url 'user_task_new' %}">New task</a></li>
     <li class="nav-item"><a class="nav-link" href="#">Logged in as: {{ user.get_username }}</a></li>
     <li class="nav-item"><a class="nav-link" href="{% url 'logout'%}">Log out</a></li>
 </ul>

@@ -2,4 +2,5 @@
 {% block title %}<title>To do list</title>{% endblock %}
 {% block content %}
 <p>{{ task }}</p>
+<a class="nav-link" href="{% url 'user_task_update' task.id %}">Update task</a></li>
 {% endblock %}

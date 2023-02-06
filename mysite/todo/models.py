@@ -29,5 +29,7 @@ class Task(models.Model):
         default='i',
         help_text='Status',
     )
+    class Meta:
+        ordering = ['dueDate']
     def __str__(self):
         return f'{self.task} | Due: {self.dueDate}'
