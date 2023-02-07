@@ -1,0 +1,18 @@
+* {
+  font-family: Verdana, sans-serif;
+}
+
+.overdue {
+color: red;
+}
+
+.lastday {
+color: orange;
+}
+
+.completed {
+color: green;
+}
+
+
+

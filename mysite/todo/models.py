@@ -1,20 +1,28 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import date
+import datetime
 
 class Task(models.Model):
     task = models.CharField('Task', max_length=100, help_text='Task name')
-    description = models.TextField('Description', max_length=1000, default="No comments.")
+    description = models.TextField('Description', max_length=1000, default="No comments.", help_text='Add a description/check list')
     insDate = models.DateTimeField('Instance date', auto_now_add=True)
-    dueDate = models.DateField('Due date', blank=True, null=True)
+    dueDate = models.DateField('Due date')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     def is_overdue(self):
         if self.dueDate and date.today() > self.dueDate:
             return True
         return False
 
-    def days_till_due(self):
-        pass
+    def is_lastday(self):
+        if self.dueDate and date.today() == self.dueDate:
+            return True
+        return False
+    def days_tilldue(self):
+        if self.dueDate:
+            due = self.dueDate - date.today()
+        return due
+
 
     LOAN_STATUS = (
         ('c', 'Completed'),

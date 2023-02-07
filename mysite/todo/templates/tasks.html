@@ -7,9 +7,20 @@
 {% for task in tasks %}
 <!--Kodel neveikia nuspalvinimas?-->
 <ul>
-    <li class="{% if task.is_overdue %} text-red {% endif %}">
-        <a href="{{ task.id }}">{{ task.task }}</a> <strong>Due: {{ task.dueDate }} </strong>
-    </li>
+    {% if task.status == 'c' %}
+    <li class='completed'><strong><a class='completed' href="{{ task.id }}">{{ task.task }}</a></strong> | {{ task.get_status_display }}</li>
+    {% else %}
+        {% if task.is_overdue %}
+        <li class='overdue'><strong><a class='overdue' href="{{ task.id }}">{{ task.task }}</a></strong>  | Due: {{ task.dueDate }} | !!!OVERDUE!!!
+        | {{ task.get_status_display }}</li>
+        {% elif task.is_lastday %}
+        <li class='lastday'><strong><a class='lastday' href="{{ task.id }}">{{ task.task }}</a></strong>  | Due: {{ task.dueDate }} | !!!LAST DAY!!!
+        | {{ task.get_status_display }}
+        {% else %}
+        <li><strong><a href="{{ task.id }}">{{ task.task }}</a></strong> | Due: {{ task.dueDate }} | Left till due: {{ task.days_tilldue }} |
+        {{ task.get_status_display }}</li>
+        {% endif %}
+    {% endif %}
 </ul>
 {% endfor %}
 {% else %}

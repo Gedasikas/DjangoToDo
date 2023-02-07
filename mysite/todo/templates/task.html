@@ -6,17 +6,13 @@
 <ul>
     <li><strong>Name: </strong>{{ task.task }}</li>
     <li><strong>Instance date: </strong>{{ task.insDate }}</li>
-<!--    Paklaust Donato kodel neveikia, kaip pakeisti?-->
-    {% if task.DueDate == None  %}
-    <li><strong>Due to: </strong>Undefined</li>
-    {% else %}
     <li><strong>Due to: </strong>{{ task.dueDate }}</li>
-    {% endif%}
     <li><strong>Status: </strong>{{ task.get_status_display }}</li>
 </ul>
 <h4><strong>Description:</strong></h4>
 <p> {{ task.description }}</p>
-<a class="nav-link" href="{% url 'user_task_update' task.id %}">UPDATE task</a></li>
+<hr>
+<a href="{% url 'user_task_update' task.id %}">UPDATE task</a></li>
 <br>
-<a class="nav-link" href="{% url 'user_task_delete' task.id %}">DELETE task</a></li>
+<a href="{% url 'user_task_delete' task.id %}">DELETE task</a></li>
 {% endblock %}
